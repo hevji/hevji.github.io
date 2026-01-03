@@ -262,6 +262,3 @@ MIT License © 2026
 Free to use, modify, and share.
 
 Made with ❤️ by **Hevji**
-
-Do you want me to do that?
-```
