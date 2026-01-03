@@ -1,4 +1,4 @@
-# Simple YouTube Downloader (Dark Theme)
+# Simple YouTube Downloader
 
 A **super-simple YouTube downloader** built with **Python (Flask) backend**, `yt-dlp`, and a minimal **HTML/CSS/JS frontend**. Focused on simplicity, lightweight design, and a clean dark theme.
 
