@@ -1,23 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hi Page</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            font-size: 48px;
-            color: #333;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Random URL Path</title>
 </head>
 <body>
-    Hi
+<h1>Random URL Path Demo</h1>
+<script>
+(() => {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+  const blockLength = 4;
+  const intervalMs = 50; // slightly slower for browser safety
+
+  function randomBlock() {
+    let out = "";
+    for (let i = 0; i < blockLength; i++) {
+      out += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return out;
+  }
+
+  function generatePath() {
+    return `#${randomBlock()}-${randomBlock()}`; // use hash instead of path
+  }
+
+  setInterval(() => {
+    try {
+      location.hash = generatePath(); // safer for GitHub Pages
+    } catch (_) {}
+  }, intervalMs);
+})();
+</script>
 </body>
 </html>
