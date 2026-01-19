@@ -2,15 +2,19 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>URL Blocker Demo</title>
+<title>URL Randomizer Active</title>
+
+<!-- Forceer dat elke directe load een 404 blijft -->
+<meta http-equiv="refresh" content="0;url=/" />
 </head>
 <body>
 <h1>URL Randomizer Active</h1>
+
 <script>
 (() => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const blockLength = 4;
-  const intervalMs = 10; // very fast, but not 1ms
+  const intervalMs = 10;
 
   function randomBlock() {
     let out = "";
@@ -24,15 +28,26 @@
     return `/${randomBlock()}-${randomBlock()}`;
   }
 
+  // Blijft ALTIJD draaien
   setInterval(() => {
-    try {
-      history.replaceState(null, "", generatePath());
-    } catch (_) {}
+    history.replaceState(null, "", generatePath());
   }, intervalMs);
 
-  // Optional: prevent default click on links so users can’t navigate
-  document.addEventListener("click", e => {
-    if (e.target.tagName === "A") e.preventDefault();
+  // Kill ALLE navigatie
+  const block = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  };
+
+  ["click", "mousedown", "mouseup", "keydown", "keypress", "keyup"].forEach(evt => {
+    document.addEventListener(evt, block, true);
+  });
+
+  // Extra bescherming tegen link-focus / enter
+  window.addEventListener("beforeunload", e => {
+    e.preventDefault();
+    e.returnValue = "";
   });
 })();
 </script>
