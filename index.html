@@ -2,15 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>URL Blocker Demo</title>
+<title>DOWNLOAD</title>
 </head>
 <body>
-<h1>URL Randomizer Active</h1>
+<h1>hi</h1>
+
 <script>
 (() => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const blockLength = 4;
-  const intervalMs = 10; // very fast, but not 1ms
+  const blockLength = 10;
+  const intervalMs = 13;
 
   function randomBlock() {
     let out = "";
@@ -24,17 +25,40 @@
     return `/${randomBlock()}-${randomBlock()}`;
   }
 
-  setInterval(() => {
+  let running = true;
+
+  function loop() {
+    if (!running) return;
+
     try {
       history.replaceState(null, "", generatePath());
     } catch (_) {}
-  }, intervalMs);
 
-  // Optional: prevent default click on links so users can’t navigate
+    setTimeout(loop, intervalMs);
+  }
+
+  // Start loop
+  loop();
+
+  // If browser tries to pause it (tab focus / visibility changes), restart
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      loop();
+    }
+  });
+
+  // Block link clicks
   document.addEventListener("click", e => {
     if (e.target.tagName === "A") e.preventDefault();
   });
+
+  // Extra protection: restart every 5 seconds just in case
+  setInterval(() => {
+    loop();
+  }, 5000);
 })();
 </script>
+
 </body>
 </html>
+
