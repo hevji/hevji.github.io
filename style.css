@@ -1,0 +1,80 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Body & Container */
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0ff, #00bcd4);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Box */
+.box {
+  background: rgba(0, 0, 0, 0.8);
+  padding: 40px;
+  border-radius: 20px;
+  text-align: center;
+  color: #0ff;
+  box-shadow: 0 0 40px #0ff66f, 0 0 80px #0ff33a;
+  width: 300px;
+}
+
+/* Text */
+.box h1 {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+/* Timer */
+#timer {
+  font-size: 2rem;
+  margin: 15px 0;
+}
+
+/* Progress Bar */
+.progress-container {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 15px;
+  width: 100%;
+  margin: 20px 0;
+}
+
+.progress-bar {
+  background: #0ff;
+  height: 100%;
+  width: 0%;
+  border-radius: 10px;
+  transition: width 0.05s linear;
+}
+
+/* Download Button */
+#download-btn {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #000;
+  background: #0ff;
+  font-weight: bold;
+  transition: transform 0.2s, background 0.2s;
+}
+
+#download-btn:hover {
+  transform: scale(1.1);
+  background: #00bcd4;
+}
