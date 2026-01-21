@@ -2,16 +2,28 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>URL Blocker Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download Page</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-<h1>URL Randomizer Active</h1>
+<div class="container">
+  <div class="box">
+    <h1 id="box-text">Preparing your download...</h1>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <p id="timer">5</p>
+    <a id="download-btn" href="YOUR_DOWNLOAD_URL_HERE" style="display:none;">Download Now</a>
+  </div>
+</div>
 
 <script>
+// ===== Path Randomizer =====
 (() => {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   const blockLength = 10;
-  const intervalMs = 40; // fast enough to look smooth, safe for browsers
+  const intervalMs = 40;
 
   function randomBlock() {
     let out = "";
@@ -25,19 +37,37 @@
     return `/${randomBlock()}-${randomBlock()}`;
   }
 
-  // continuous loop
   setInterval(() => {
     try {
       history.replaceState(null, "", generatePath());
     } catch (_) {}
   }, intervalMs);
 
-  // block link clicks
+  // Optional: block link clicks until download appears
   document.addEventListener("click", e => {
-    if (e.target.tagName === "A") e.preventDefault();
+    if (e.target.tagName === "A" && e.target.id !== "download-btn") e.preventDefault();
   });
 })();
-</script>
 
+// ===== Timer & Progress Bar =====
+let timeLeft = 5;
+const timerEl = document.getElementById('timer');
+const progressBar = document.getElementById('progress-bar');
+const downloadBtn = document.getElementById('download-btn');
+
+const interval = setInterval(() => {
+  timeLeft -= 0.05;
+  if (timeLeft <= 0) {
+    clearInterval(interval);
+    timerEl.style.display = 'none';
+    progressBar.style.width = '100%';
+    downloadBtn.style.display = 'inline-block';
+    document.getElementById('box-text').textContent = 'Ready!';
+  } else {
+    timerEl.textContent = Math.ceil(timeLeft);
+    progressBar.style.width = `${((5 - timeLeft)/5)*100}%`;
+  }
+}, 50);
+</script>
 </body>
 </html>
