@@ -73,20 +73,18 @@ h1 {
 <div class="button-box">
   <div id="v1Btn" class="btn">Go to V1 [mc version 1.8.8]</div>
   <div id="v2Btn" class="btn">Go to V2 [mc version 1.5.2]</div>
+  <div id="v3Btn" class="btn">Go to V3 [mc version 1.12.2]</div> <!-- New button -->
 </div>
 
 <script>
-// Characters for token
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
 
-// Generate random token like XXXX-XXXX
 function generateToken() {
   const part1 = Array.from({length:4}, ()=>chars[Math.floor(Math.random()*chars.length)]).join('');
   const part2 = Array.from({length:4}, ()=>chars[Math.floor(Math.random()*chars.length)]).join('');
   return `${part1}-${part2}`;
 }
 
-// Click handler for buttons
 function goToLoading(page){
   const token = generateToken();
   window.location.href = `loader.html?page=${page}&token=${token}`;
@@ -94,7 +92,7 @@ function goToLoading(page){
 
 document.getElementById('v1Btn').addEventListener('click', ()=>goToLoading('v1'));
 document.getElementById('v2Btn').addEventListener('click', ()=>goToLoading('v2'));
+document.getElementById('v3Btn').addEventListener('click', ()=>goToLoading('v3')); // Event listener for V3
 </script>
-
 </body>
 </html>
