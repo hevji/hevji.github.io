@@ -7,7 +7,7 @@
 <style>
   body {
     margin: 0;
-    min-height: 100vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -34,7 +34,7 @@
     flex-direction: column;
     gap: 20px;
     background-color: rgba(20, 20, 20, 0.9);
-    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    box-shadow: 0 0 20px #fff; /* White glow around box */
   }
 
   .btn {
@@ -46,35 +46,20 @@
     text-decoration: none;
     text-align: center;
     font-weight: bold;
-    transition: all 0.2s ease;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
   .btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.6);
-    border-color: #777;
-  }
-
-  footer {
-    margin-top: auto;
-    padding: 10px 0;
-    color: #ccc;
-    font-size: 0.9rem;
-    background-color: rgba(0, 0, 0, 0.2); /* Transparent footer */
-    width: 100%;
-    text-align: center;
-    position: relative;
+    box-shadow: 0 0 15px #fff; /* White glow on hover */
+    border-color: #fff;
   }
 </style>
 </head>
 <body>
   <h1>MC Loader</h1> <!-- Change this to whatever you like -->
   <div class="button-box">
-    <a href="v1.html" class="btn">Go to V1 (broken)</a>
-    <a href="v2.html" class="btn">Go to V2 (works)</a>
+    <a href="v1.html" class="btn">Go to V1 [1.5.2] (broken)</a>
+    <a href="v2.html" class="btn">Go to V2 [1.8]</a>
   </div>
-  <footer>
-    © 2026 hevji
-  </footer>
 </body>
 </html>
