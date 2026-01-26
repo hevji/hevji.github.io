@@ -1,6 +1,8 @@
-# **Minecraft** browser edition 1.8.8 and 1.5.2
+# **Eagler** Loader 1.8.8 and 1.5.2
 ---
 > Powered by **Eaglercraft**
+
+### Securely made so sch00ls dont detect anthing!
 
 ## 🛡 Security Notes
 
