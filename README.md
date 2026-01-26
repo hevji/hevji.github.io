@@ -1,7 +1,7 @@
 # MC Loader
 
-You can play mc in:
+### You can play mc in:
 - school
 - and home
 
-> MC Loader
+> MC Loader, Powered by **eagsig**
