@@ -38,40 +38,30 @@
   .loading-bar {
     width: 200px;
     height: 20px;
-    border: 1px solid #555;
-    border-radius: 8px;
+    border-radius: 10px;
     background-color: #1e1e1e;
     overflow: hidden;
     margin: 0 auto;
-    position: relative;
+    border: 1px solid #555;
   }
 
   .loader {
-    width: 20px;
     height: 100%;
+    width: 0;
     background-color: #fff;
-    position: absolute;
-    left: 0;
-    animation: jump 2s infinite;
+    border-radius: 10px; /* Rounded edges match the bar */
+    animation: fillBar 5s linear forwards; /* Fill in 5 seconds */
   }
 
-  @keyframes jump {
-    0%   { left: 0; }
-    25%  { left: 40px; }
-    50%  { left: 80px; }
-    75%  { left: 120px; }
-    100% { left: 160px; }
-  }
-
-  /* Make the jumps smooth with ease-out */
-  .loader {
-    animation-timing-function: ease-out;
+  @keyframes fillBar {
+    from { width: 0; }
+    to { width: 100%; }
   }
 </style>
 <script>
   // Redirect after 5 seconds
   setTimeout(() => {
-    window.location.href = "v1.html";
+    window.location.href = "v1.html"; // Change to v2.html or random if needed
   }, 5000);
 </script>
 </head>
