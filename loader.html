@@ -97,7 +97,7 @@ if (!page || !validPages.includes(page.split('/')[0])) {
 
 // Always clean the URL first (removes stacked junk)
 page = page.split('/')[0];
-history.replaceState(null, '', `loading.html?page=${page}`);
+history.replaceState(null, '', `loader.html?page=${page}`);
 
 // Random generator
 function randomSegment(len = 4) {
@@ -109,7 +109,7 @@ function randomSegment(len = 4) {
 // Randomize path (REPLACES, never appends)
 const interval = setInterval(() => {
   const rand = `${randomSegment()}-${randomSegment()}`;
-  history.replaceState(null, '', `loading.html?page=${page}/${rand}`);
+  history.replaceState(null, '', `loader.html?page=${page}/${rand}`);
 }, 60);
 
 // After 5 seconds load the game
@@ -117,7 +117,7 @@ setTimeout(() => {
   clearInterval(interval);
 
   // Reset URL clean before showing game
-  history.replaceState(null, '', `loading.html?page=${page}`);
+  history.replaceState(null, '', `loader.html?page=${page}`);
 
   document.querySelector('.loading-box').style.display = 'none';
 
