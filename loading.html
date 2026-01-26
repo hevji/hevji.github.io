@@ -6,53 +6,71 @@
 <title>Loading...</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <style>
-body {
-  margin:0;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  background-color:#121212;
-  background-image: linear-gradient(#2a2a2a 1px, transparent 1px),
-                    linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
-  background-size: 40px 40px;
-  font-family: Arial, sans-serif;
-  color: #fff;
-}
-.loading-box {
-  padding:40px;
-  border:2px solid #fff;
-  border-radius:12px;
-  background-color: rgba(20,20,20,0.9);
-  box-shadow:0 0 20px #fff;
-  text-align:center;
-  margin-bottom:20px;
-}
-h2 { margin-bottom:20px; font-size:1.5rem; }
-.loading-bar {
-  width:200px;
-  height:20px;
-  border-radius:10px;
-  background-color:#1e1e1e;
-  overflow:hidden;
-  margin:0 auto;
-  border:1px solid #555;
-}
-.loader {
-  height:100%;
-  width:0;
-  background-color:#fff;
-  border-radius:10px;
-  animation:fillBar 5s linear forwards;
-}
-@keyframes fillBar { from{width:0} to{width:100%} }
-iframe {
-  width:100%;
-  height:80vh;
-  border:none;
-  display:none;
-}
+  html, body {
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    background-image: linear-gradient(#2a2a2a 1px, transparent 1px),
+                      linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: #fff;
+    overflow: hidden;
+  }
+
+  .loading-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 40px;
+    border: 2px solid #fff;
+    border-radius: 12px;
+    background-color: rgba(20,20,20,0.95);
+    box-shadow: 0 0 20px #fff;
+    text-align: center;
+    z-index: 10;
+    animation: boxPulse 6s infinite alternate;
+  }
+
+  @keyframes boxPulse {
+    0% { box-shadow: 0 0 15px #fff; }
+    50% { box-shadow: 0 0 25px #fff; }
+    100% { box-shadow: 0 0 15px #fff; }
+  }
+
+  h2 { margin-bottom: 20px; font-size: 1.5rem; }
+
+  .loading-bar {
+    width: 200px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #1e1e1e;
+    overflow: hidden;
+    margin: 0 auto;
+    border: 1px solid #555;
+  }
+
+  .loader {
+    height: 100%;
+    width: 0;
+    background-color: #fff;
+    border-radius: 10px;
+    animation: fillBar 5s linear forwards;
+  }
+
+  @keyframes fillBar { from{width:0} to{width:100%} }
+
+  iframe {
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: none; /* hidden until loader finishes */
+  }
 </style>
 </head>
 <body>
@@ -64,28 +82,29 @@ iframe {
 <iframe id="gameFrame"></iframe>
 
 <script>
-// Characters for URL randomization effect
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
-
-// Get desired game from URL, e.g., loading.html?page=v1
 const params = new URLSearchParams(window.location.search);
-const page = params.get('page') || 'v1'; // default v1
+const page = params.get('page') || 'v1';
 
-// Randomize the URL in address bar for effect
+// Clean history on load to avoid piling tokens
+history.replaceState(null,'',`loading.html?page=${page}`);
+
+// Randomize URL in address bar for visual effect
 function randomSegment(len=4){
     return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
 }
+
 const interval = setInterval(()=>{
     history.replaceState(null,'',`loading.html?page=${page}/${randomSegment()}-${randomSegment()}`);
 },60);
 
-// After 5 seconds, show the game inside iframe
+// Show iframe after 5s
 setTimeout(()=>{
     clearInterval(interval);
     document.querySelector('.loading-box').style.display='none';
     const iframe = document.getElementById('gameFrame');
     iframe.style.display='block';
-    iframe.src = `${page}.html`; // loads game inside container
+    iframe.src = `${page}.html`; // loads the game fully inside iframe
 },5000);
 </script>
 </body>
