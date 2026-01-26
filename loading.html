@@ -27,12 +27,7 @@ body {
   background-color: rgba(20,20,20,0.9);
   box-shadow:0 0 20px #fff;
   text-align:center;
-  animation: boxPulse 6s infinite alternate;
-}
-@keyframes boxPulse {
-  0% { box-shadow:0 0 15px #fff; }
-  50% { box-shadow:0 0 25px #fff; }
-  100% { box-shadow:0 0 15px #fff; }
+  margin-bottom:20px;
 }
 h2 { margin-bottom:20px; font-size:1.5rem; }
 .loading-bar {
@@ -51,9 +46,12 @@ h2 { margin-bottom:20px; font-size:1.5rem; }
   border-radius:10px;
   animation:fillBar 5s linear forwards;
 }
-@keyframes fillBar {
-  from { width:0; }
-  to { width:100%; }
+@keyframes fillBar { from{width:0} to{width:100%} }
+iframe {
+  width:100%;
+  height:80vh;
+  border:none;
+  display:none;
 }
 </style>
 </head>
@@ -63,31 +61,31 @@ h2 { margin-bottom:20px; font-size:1.5rem; }
   <div class="loading-bar"><div class="loader"></div></div>
 </div>
 
+<iframe id="gameFrame"></iframe>
+
 <script>
+// Characters for URL randomization effect
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
 
-// Get page and token from URL
+// Get desired game from URL, e.g., loading.html?page=v1
 const params = new URLSearchParams(window.location.search);
-const page = params.get('page')?.split('/')[0] || 'v1';
-const token = params.get('token');
+const page = params.get('page') || 'v1'; // default v1
 
-// If no token, go to 404
-if(!token){
-    window.location.href = '404.html';
-}
-
-// Randomize URL every 60ms for effect
+// Randomize the URL in address bar for effect
 function randomSegment(len=4){
     return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
 }
 const interval = setInterval(()=>{
-    history.replaceState(null,'',`loading.html?page=${page}/${randomSegment()}-${randomSegment()}&token=${token}`);
+    history.replaceState(null,'',`loading.html?page=${page}/${randomSegment()}-${randomSegment()}`);
 },60);
 
-// Redirect after 5 seconds
+// After 5 seconds, show the game inside iframe
 setTimeout(()=>{
     clearInterval(interval);
-    window.location.href = `${page}.html?token=${token}`;
+    document.querySelector('.loading-box').style.display='none';
+    const iframe = document.getElementById('gameFrame');
+    iframe.style.display='block';
+    iframe.src = `${page}.html`; // loads game inside container
 },5000);
 </script>
 </body>
