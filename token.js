@@ -27,5 +27,5 @@ function expireToken() {
 // Randomize URL for cosmetic effect
 function randomizeURL(page) {
     const randomPart = generateToken();
-    history.replaceState(null, '', `loading.html?page=${page}/${randomPart}`);
+    history.replaceState(null, '', `loader.html?page=${page}/${randomPart}`);
 }
