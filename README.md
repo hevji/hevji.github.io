@@ -40,21 +40,7 @@ You must own a legitimate copy of Minecraft to comply with Mojang’s EULA.
 
 ## 📦 Project Structure
 
-mc-loader/
-├── public/
-│   ├── index.html
-│   ├── css/
-│   │   └── style.css
-│   ├── js/
-│   │   ├── loader.js
-│   │   └── versions.js
-│   └── eagler/
-│       ├── 1.5.2/
-│       └── 1.8.8/
-├── servers.json
-├── README.md
-└── LICENSE
-
+there is nun rn mb
 ---
 
 ## 🎮 Usage
