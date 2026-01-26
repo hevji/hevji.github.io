@@ -57,15 +57,6 @@ mc-loader/
 
 ---
 
-## 🚀 Getting Started
-
-Clone the repository:
-
-git clone https://github.com/yourname/mc-loader.git
-cd mc-loader
-
----
-
 ## 🎮 Usage
 
 1. Open the loader in your browser
