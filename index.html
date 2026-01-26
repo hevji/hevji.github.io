@@ -89,7 +89,7 @@ function generateToken() {
 // Click handler for buttons
 function goToLoading(page){
   const token = generateToken();
-  window.location.href = `loading.html?page=${page}&token=${token}`;
+  window.location.href = `loader.html?page=${page}&token=${token}`;
 }
 
 document.getElementById('v1Btn').addEventListener('click', ()=>goToLoading('v1'));
