@@ -83,7 +83,9 @@
 
 <script>
 const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
-const validPages = ['v1', 'v2'];
+
+// Add v3 here
+const validPages = ['v1', 'v2', 'v3'];
 
 // Read original URL
 const url = new URL(window.location.href);
@@ -123,7 +125,7 @@ setTimeout(() => {
 
   const iframe = document.getElementById('gameFrame');
   iframe.style.display = 'block';
-  iframe.src = `${page}.html`;
+  iframe.src = `${page}.html`; // Now supports v3.html
 }, 5000);
 </script>
 </body>
