@@ -63,36 +63,45 @@
   }
 </style>
 <script>
-  // Read token from URL
+  // Allowed symbols for randomizing URL
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
+
+  function randomSegment(len=4){
+    return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+  }
+
+  // Get page and token from URL
   const params = new URLSearchParams(window.location.search);
   const page = params.get('page')?.split('/')[0] || 'v1';
   const token = params.get('page')?.split('/')[1];
 
-  // Validate token
-  if(!token || sessionStorage.getItem('loaderToken') !== token){
-    // Invalid token → go to 404
+  // Validate session token
+  const storedToken = sessionStorage.getItem('loaderToken');
+  if(!token || token !== storedToken){
+    // Invalid → 404
     window.location.href = "404.html";
   } else {
-    // Token valid → start loader and remove token from session
+    // Valid → remove token so it can't be reused
     sessionStorage.removeItem('loaderToken');
 
-    // Cosmetic URL randomization (xxxx-xxxx) every 60ms
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
-    function randomSegment(len=4){ return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join(''); }
-    function updateRandomURL(){ history.replaceState(null,'',`loading.html?page=${page}/${randomSegment()}-${randomSegment()}`); }
+    // Cosmetic random URL effect every 60ms
+    function updateRandomURL(){
+      const randomPath = page + '/' + randomSegment() + '-' + randomSegment();
+      history.replaceState(null,'',`loading.html?page=${randomPath}`);
+    }
     const interval = setInterval(updateRandomURL,60);
 
     // Redirect after 5 seconds
     setTimeout(()=>{
       clearInterval(interval);
-      window.location.href = page+".html";
+      window.location.href = page + ".html";
     },5000);
   }
 </script>
 </head>
 <body>
   <div class="loading-box">
-    <h2>Please wait for the page to load securely</h2>
+    <h2>Please wait for the page to load</h2>
     <div class="loading-bar">
       <div class="loader"></div>
     </div>
