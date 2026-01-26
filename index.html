@@ -6,90 +6,33 @@
 <title>Home</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <style>
-  body {
-    margin:0;
-    height:100vh;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    background-color:#121212;
-    background-image: linear-gradient(#2a2a2a 1px, transparent 1px),
-                      linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
-    background-size: 40px 40px;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    animation: bgPulse 10s infinite alternate;
-  }
-  @keyframes bgPulse {
-    0% { background-color: #121212; }
-    50% { background-color: #101010; }
-    100% { background-color: #121212; }
-  }
-
-  h1 {
-    margin-bottom: 30px;
-    font-size:2rem;
-    text-align:center;
-  }
-
-  .button-box {
-    padding: 40px;
-    border:2px solid #fff;
-    border-radius:12px;
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-    background-color: rgba(20,20,20,0.9);
-    box-shadow:0 0 20px #fff;
-    animation: boxPulse 6s infinite alternate;
-  }
-
-  @keyframes boxPulse {
-    0% { box-shadow:0 0 15px #fff; }
-    50% { box-shadow:0 0 25px #fff; }
-    100% { box-shadow:0 0 15px #fff; }
-  }
-
-  .btn {
-    padding: 15px 30px;
-    border:1px solid #555;
-    border-radius:8px;
-    background-color:#1e1e1e;
-    color:#fff;
-    text-decoration:none;
-    text-align:center;
-    font-weight:bold;
-    transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  }
-
-  .btn:hover {
-    box-shadow:0 0 15px #fff;
-    border-color:#fff;
-  }
+body{margin:0;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;background-color:#121212;background-image:linear-gradient(#2a2a2a 1px, transparent 1px),linear-gradient(90deg,#2a2a2a 1px, transparent 1px);background-size:40px 40px;font-family:Arial,sans-serif;color:#fff}
+h1{margin-bottom:30px;font-size:2rem;text-align:center}
+.button-box{padding:40px;border:2px solid #fff;border-radius:12px;display:flex;flex-direction:column;gap:20px;background-color:rgba(20,20,20,0.9);box-shadow:0 0 20px #fff}
+.btn{padding:15px 30px;border:1px solid #555;border-radius:8px;background-color:#1e1e1e;color:#fff;text-decoration:none;text-align:center;font-weight:bold;transition: box-shadow 0.3s ease, border-color 0.3s ease}
+.btn:hover{box-shadow:0 0 15px #fff;border-color:#fff}
 </style>
-<script>
-  // Generate a one-time token and store in sessionStorage
-  function generateLink(page){
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
-    const token = Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('') +
-                  '-' +
-                  Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
-    sessionStorage.setItem('loaderToken', token);
-    return `loading.html?page=${page}/${token}`;
-  }
-</script>
+<script src="token.js"></script>
 </head>
 <body>
-  <h1>MC Loader</h1>
-  <div class="button-box">
-    <a id="v1Btn" class="btn">Go to V1 [1.8]</a>
-    <a id="v2Btn" class="btn">Go to V2 [1.5.2] (singleplayer broken)</a>
-  </div>
-
-  <script>
-    document.getElementById('v1Btn').href = generateLink('v1');
-    document.getElementById('v2Btn').href = generateLink('v2');
-  </script>
+<h1>My Custom Title</h1>
+<div class="button-box">
+    <a id="v1Btn" class="btn">Go to V1</a>
+    <a id="v2Btn" class="btn">Go to V2</a>
+</div>
+<script>
+document.getElementById('v1Btn').addEventListener('click', e=>{
+    e.preventDefault();
+    const token = generateToken();
+    saveToken(token);
+    window.location.href = `loading.html?page=v1&token=${token}`;
+});
+document.getElementById('v2Btn').addEventListener('click', e=>{
+    e.preventDefault();
+    const token = generateToken();
+    saveToken(token);
+    window.location.href = `loading.html?page=v2&token=${token}`;
+});
+</script>
 </body>
 </html>
