@@ -59,9 +59,13 @@
   }
 </style>
 <script>
-  // Redirect after 5 seconds
+  // Get the page parameter from URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const page = urlParams.get('page') || "v1"; // default to v1 if missing
+
+  // Redirect after 5 seconds to the correct page
   setTimeout(() => {
-    window.location.href = "v1.html"; // Change to v2.html or random if needed
+    window.location.href = page + ".html";
   }, 5000);
 </script>
 </head>
