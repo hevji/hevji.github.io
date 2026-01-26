@@ -49,8 +49,8 @@
     height: 100%;
     width: 0;
     background-color: #fff;
-    border-radius: 10px; /* Rounded edges match the bar */
-    animation: fillBar 5s linear forwards; /* Fill in 5 seconds */
+    border-radius: 10px;
+    animation: fillBar 5s linear forwards;
   }
 
   @keyframes fillBar {
@@ -59,19 +59,41 @@
   }
 </style>
 <script>
-  // Get the page parameter from URL
+  // 1. Get the page parameter (e.g., v1 or v2)
   const urlParams = new URLSearchParams(window.location.search);
-  const page = urlParams.get('page') || "v1"; // default to v1 if missing
+  const page = urlParams.get('page') || "v1";
 
-  // Redirect after 5 seconds to the correct page
+  // 2. Randomization function
+  function randomChar() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
+    return chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  function randomSegment() {
+    let seg = '';
+    for (let i = 0; i < 4; i++) seg += randomChar();
+    return seg;
+  }
+
+  function updateRandomURL() {
+    const randomPath = `${page}/${randomSegment()}-${randomSegment()}`;
+    // Update URL without reloading
+    history.replaceState(null, '', `loading.html?page=${randomPath}`);
+  }
+
+  // 3. Update every 60ms
+  const randomInterval = setInterval(updateRandomURL, 60);
+
+  // 4. Redirect after 5 seconds to the correct page (without the random stuff)
   setTimeout(() => {
+    clearInterval(randomInterval);
     window.location.href = page + ".html";
   }, 5000);
 </script>
 </head>
 <body>
   <div class="loading-box">
-    <h2>Please wait for the page to load</h2>
+    <h2>Please wait until the page is securely loaded</h2>
     <div class="loading-bar">
       <div class="loader"></div>
     </div>
