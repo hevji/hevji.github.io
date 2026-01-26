@@ -2,7 +2,7 @@
 ---
 > Powered by **Eaglercraft**
 
-### Securely made so sch00ls dont detect anthing!
+### Securely made so *schools* dont detect anthing!
 
 ## 🛡 Security Notes
 
