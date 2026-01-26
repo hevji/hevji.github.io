@@ -14,9 +14,8 @@ body {
   justify-content:center;
   align-items:center;
   background-color:#121212;
-  background-image:
-    linear-gradient(#2a2a2a 1px, transparent 1px),
-    linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
+  background-image: linear-gradient(#2a2a2a 1px, transparent 1px),
+                    linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
   background-size: 40px 40px;
   font-family: Arial, sans-serif;
   color: #fff;
@@ -50,53 +49,46 @@ h2 { margin-bottom:20px; font-size:1.5rem; }
   width:0;
   background-color:#fff;
   border-radius:10px;
-  animation: fillBar 5s linear forwards;
+  animation:fillBar 5s linear forwards;
 }
 @keyframes fillBar {
   from { width:0; }
   to { width:100%; }
 }
 </style>
-<script>
-const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
-
-// Get original page param
-let params = new URLSearchParams(window.location.search);
-let page = params.get('page')?.split('/')[0] || 'v1';
-
-// Save initial random token
-let initialToken = params.get('page')?.split('/')[1] || '';
-
-// If the user refreshes, the token no longer matches → 404
-if(initialToken === '') {
-  window.location.href = '404.html';
-}
-
-// Cosmetic randomization
-function randomSegment(len=4){ 
-  return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
-}
-
-function updateRandomURL(){
-  history.replaceState(null,'',`loading.html?page=${page}/${randomSegment()}-${randomSegment()}`);
-}
-
-// Run every 60ms
-let interval = setInterval(updateRandomURL, 60);
-
-// Redirect after 5s
-setTimeout(()=>{
-  clearInterval(interval);
-  window.location.href = page + '.html';
-},5000);
-</script>
 </head>
 <body>
 <div class="loading-box">
   <h2>Please wait for the page to load</h2>
-  <div class="loading-bar">
-    <div class="loader"></div>
-  </div>
+  <div class="loading-bar"><div class="loader"></div></div>
 </div>
+
+<script>
+const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
+
+// Get page and token from URL
+const params = new URLSearchParams(window.location.search);
+const page = params.get('page')?.split('/')[0] || 'v1';
+const token = params.get('token');
+
+// If no token, go to 404
+if(!token){
+    window.location.href = '404.html';
+}
+
+// Randomize URL every 60ms for effect
+function randomSegment(len=4){
+    return Array.from({length:len},()=>chars[Math.floor(Math.random()*chars.length)]).join('');
+}
+const interval = setInterval(()=>{
+    history.replaceState(null,'',`loading.html?page=${page}/${randomSegment()}-${randomSegment()}&token=${token}`);
+},60);
+
+// Redirect after 5 seconds
+setTimeout(()=>{
+    clearInterval(interval);
+    window.location.href = `${page}.html?token=${token}`;
+},5000);
+</script>
 </body>
 </html>
