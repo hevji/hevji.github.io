@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MC Launcher</title>
+<title>MC Loader</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <style>
 body {
@@ -20,11 +20,21 @@ body {
   font-family: Arial, sans-serif;
   color: #fff;
 }
+
 h1 {
-  margin-bottom:30px;
+  margin-bottom: 8px;
   font-size:2rem;
   text-align:center;
 }
+
+.subtitle {
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+  color: #aaa;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
 .button-box {
   padding:40px;
   border:2px solid #fff;
@@ -35,6 +45,7 @@ h1 {
   background-color: rgba(20,20,20,0.9);
   box-shadow:0 0 20px #fff;
 }
+
 .btn {
   padding:15px 30px;
   border:1px solid #555;
@@ -47,6 +58,7 @@ h1 {
   transition: box-shadow 0.3s ease, border-color 0.3s ease;
   cursor:pointer;
 }
+
 .btn:hover {
   box-shadow:0 0 15px #fff;
   border-color:#fff;
@@ -54,7 +66,10 @@ h1 {
 </style>
 </head>
 <body>
+
 <h1>MC Loader</h1>
+<p class="subtitle">Powered by eagtek</p>
+
 <div class="button-box">
   <div id="v1Btn" class="btn">Go to V1 [1.8]</div>
   <div id="v2Btn" class="btn">Go to V2 [1.5.2] (singleplayer broken)</div>
@@ -80,5 +95,6 @@ function goToLoading(page){
 document.getElementById('v1Btn').addEventListener('click', ()=>goToLoading('v1'));
 document.getElementById('v2Btn').addEventListener('click', ()=>goToLoading('v2'));
 </script>
+
 </body>
 </html>
