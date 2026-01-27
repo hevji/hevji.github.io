@@ -87,12 +87,14 @@ function generateToken() {
 
 function goToLoading(page){
   const token = generateToken();
-  window.location.href = `loader.html?page=${page}&token=${token}`;
+  // page is now a full path
+  window.location.href = `loader.html?page=${encodeURIComponent(page)}&token=${token}`;
 }
 
-document.getElementById('v1Btn').addEventListener('click', ()=>goToLoading('v1'));
-document.getElementById('v2Btn').addEventListener('click', ()=>goToLoading('v2'));
-document.getElementById('v3Btn').addEventListener('click', ()=>goToLoading('v3')); // Event listener for V3
+// now pass the real paths
+document.getElementById('v1Btn').addEventListener('click', ()=>goToLoading('/games/v1.html'));
+document.getElementById('v2Btn').addEventListener('click', ()=>goToLoading('/games/v2.html'));
+document.getElementById('v3Btn').addEventListener('click', ()=>goToLoading('/games/v3.html'));
 </script>
 </body>
 </html>
