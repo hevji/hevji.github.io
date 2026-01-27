@@ -77,24 +77,17 @@ h1 {
 </div>
 
 <script>
-const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789~^&!@#$%*';
+document.getElementById('v1Btn').addEventListener('click', () => {
+  window.location.href = '/games/v1.html';
+});
 
-function generateToken() {
-  const part1 = Array.from({length:4}, ()=>chars[Math.floor(Math.random()*chars.length)]).join('');
-  const part2 = Array.from({length:4}, ()=>chars[Math.floor(Math.random()*chars.length)]).join('');
-  return `${part1}-${part2}`;
-}
+document.getElementById('v2Btn').addEventListener('click', () => {
+  window.location.href = '/games/v2.html';
+});
 
-function goToLoading(page){
-  const token = generateToken();
-  // page is now a full path
-  window.location.href = `loader.html?page=${encodeURIComponent(page)}&token=${token}`;
-}
-
-// now pass the real paths
-document.getElementById('v1Btn').addEventListener('click', ()=>goToLoading('/games/v1.html'));
-document.getElementById('v2Btn').addEventListener('click', ()=>goToLoading('/games/v2.html'));
-document.getElementById('v3Btn').addEventListener('click', ()=>goToLoading('/games/v3.html'));
+document.getElementById('v3Btn').addEventListener('click', () => {
+  window.location.href = '/games/v3.html';
+});
 </script>
 </body>
 </html>
