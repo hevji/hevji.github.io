@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: 'Inter', sans-serif;
+  background: #050508;
+  color: #eaeaff;
+  overflow: hidden;
+}
+
+/* === GRID BACKGROUND === */
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  background:
+    linear-gradient(rgba(120,120,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120,120,255,0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+  filter: drop-shadow(0 0 12px rgba(120,120,255,0.12));
+  animation: gridMove 30s linear infinite;
+  z-index: -1;
+}
+
+@keyframes gridMove {
+  from { background-position: 0 0; }
+  to { background-position: 600px 600px; }
+}
+
+/* === APP CARD === */
+.app {
+  max-width: 700px;
+  margin: 80px auto;
+  padding: 40px;
+  background: rgba(15,15,25,0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow:
+    0 0 40px rgba(120,120,255,0.15),
+    inset 0 0 20px rgba(120,120,255,0.05);
+  animation: fadeUp 1s ease;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  margin: 0;
+  font-size: 2.5rem;
+  text-align: center;
+  text-shadow: 0 0 15px rgba(120,120,255,0.5);
+}
+
+.subtitle {
+  text-align: center;
+  opacity: 0.7;
+  margin-bottom: 30px;
+}
+
+/* === INPUT === */
+textarea {
+  width: 100%;
+  min-height: 120px;
+  resize: none;
+  padding: 15px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  background: rgba(10,10,20,0.9);
+  color: #fff;
+  box-shadow: inset 0 0 10px rgba(120,120,255,0.15);
+  transition: box-shadow 0.3s ease;
+}
+
+textarea:focus {
+  box-shadow: 0 0 15px rgba(120,120,255,0.4);
+}
+
+/* === CONTROLS === */
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.controls label {
+  font-weight: 500;
+}
+
+.controls input[type="range"] {
+  flex: 1;
+  accent-color: #7a7aff;
+}
+
+#rotValue {
+  min-width: 32px;
+  text-align: center;
+  font-weight: 700;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* === OUTPUT === */
+.output-box {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(10,10,20,0.8);
+  border-radius: 12px;
+  box-shadow: inset 0 0 10px rgba(120,120,255,0.12);
+  animation: glow 4s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: inset 0 0 10px rgba(120,120,255,0.12); }
+  50% { box-shadow: inset 0 0 18px rgba(120,120,255,0.25); }
+}
+
+.output-box h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: monospace;
+  font-size: 1rem;
+}
