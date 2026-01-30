@@ -1,93 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MC Loader</title>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<style>
-body {
-  margin:0;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  background-color:#121212;
-  background-image: linear-gradient(#2a2a2a 1px, transparent 1px),
-                    linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
-  background-size: 40px 40px;
-  font-family: Arial, sans-serif;
-  color: #fff;
-}
-
-h1 {
-  margin-bottom: 8px;
-  font-size:2rem;
-  text-align:center;
-}
-
-.subtitle {
-  margin-bottom: 30px;
-  font-size: 0.95rem;
-  color: #aaa;
-  text-align: center;
-  letter-spacing: 0.5px;
-}
-
-.button-box {
-  padding:40px;
-  border:2px solid #fff;
-  border-radius:12px;
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-  background-color: rgba(20,20,20,0.9);
-  box-shadow:0 0 20px #fff;
-}
-
-.btn {
-  padding:15px 30px;
-  border:1px solid #555;
-  border-radius:8px;
-  background-color:#1e1e1e;
-  color:#fff;
-  text-decoration:none;
-  text-align:center;
-  font-weight:bold;
-  transition: box-shadow 0.3s ease, border-color 0.3s ease;
-  cursor:pointer;
-}
-
-.btn:hover {
-  box-shadow:0 0 15px #fff;
-  border-color:#fff;
-}
-</style>
+  <meta charset="UTF-8" />
+  <title>ROT Decoder</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="grid-bg"></div>
 
-<h1>MC Loader</h1>
-<p class="subtitle">Powered by eagtek</p>
+  <main class="app">
+    <h1 class="title">ROT Decoder</h1>
+    <p class="subtitle">Decode ROT1 → ROT25 instantly</p>
 
-<div class="button-box">
-  <div id="v1Btn" class="btn">Go to V1 [mc version 1.8.8]</div>
-  <div id="v2Btn" class="btn">Go to V2 [mc version 1.5.2]</div>
-  <div id="v3Btn" class="btn">Go to V3 [mc version 1.12.2]</div> <!-- New button -->
-</div>
+    <textarea id="input" placeholder="Enter text here..."></textarea>
 
-<script>
-document.getElementById('v1Btn').addEventListener('click', () => {
-  window.location.href = '/games/v1.html';
-});
+    <div class="controls">
+      <label for="rot">Rotation</label>
+      <input type="range" id="rot" min="1" max="25" value="13">
+      <span id="rotValue">13</span>
+    </div>
 
-document.getElementById('v2Btn').addEventListener('click', () => {
-  window.location.href = '/games/v2.html';
-});
+    <div class="output-box">
+      <h2>Decoded Output</h2>
+      <pre id="output"></pre>
+    </div>
+  </main>
 
-document.getElementById('v3Btn').addEventListener('click', () => {
-  window.location.href = '/games/v3.html';
-});
-</script>
+  <script src="script.js"></script>
 </body>
 </html>
