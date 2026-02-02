@@ -27,12 +27,12 @@
 
   h1 {
     font-size: 3rem;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
 
   p {
-    opacity: 0.8;
-    margin-bottom: 10px;
+    opacity: 0.75;
+    margin-bottom: 12px;
   }
 
   textarea {
@@ -44,48 +44,32 @@
     background: #1e1e1e;
     color: #fff;
 
-    border: 1px solid #555;
+    border: 1px solid #444;
     border-radius: 8px;
 
     resize: none;
     outline: none;
+
+    /* soft glow */
+    box-shadow: 0 0 10px rgba(255,255,255,0.08);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
-  .controls {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  button {
-    padding: 10px 18px;
-
-    border: 1px solid #555;
-    border-radius: 8px;
-
-    background-color: #1e1e1e;
-    color: #fff;
-
-    font-weight: bold;
-    cursor: pointer;
-
-    box-shadow: 0 0 15px #fff;
-    transition: 0.2s;
-  }
-
-  button:hover {
-    box-shadow: 0 0 20px #fff;
-    border-color: #fff;
-  }
-
-  .active {
-    border-color: #fff;
-    box-shadow: 0 0 25px #fff;
+  textarea:focus {
+    border-color: #888;
+    box-shadow: 0 0 16px rgba(255,255,255,0.18);
   }
 
   .slider-box {
-    margin-top: 15px;
-    text-align: center;
+    margin-top: 12px;
+    padding: 14px 18px;
+
+    border-radius: 10px;
+
+    background: #1b1b1b;
+
+    /* soft container glow */
+    box-shadow: 0 0 14px rgba(255,255,255,0.07);
   }
 
   input[type="range"] {
@@ -93,7 +77,7 @@
   }
 
   .rot-value {
-    margin-top: 5px;
+    margin-top: 6px;
     font-size: 0.9rem;
     opacity: 0.8;
   }
@@ -103,14 +87,9 @@
 <body>
 
   <h1>ROT Cipher</h1>
-  <p>Shift letters with a custom rotation</p>
+  <p>Slide to change the rotation</p>
 
   <textarea id="input" placeholder="Enter text..."></textarea>
-
-  <div class="controls">
-    <button id="toggleBtn" onclick="toggleMode()">Mode: Decode</button>
-    <button onclick="process()">Run</button>
-  </div>
 
   <div class="slider-box">
     <input type="range" id="rotSlider" min="1" max="25" value="13">
@@ -120,8 +99,6 @@
   <textarea id="output" placeholder="Result..." readonly></textarea>
 
 <script>
-let mode = "decode";
-
 const input = document.getElementById("input");
 const output = document.getElementById("output");
 const slider = document.getElementById("rotSlider");
@@ -130,32 +107,18 @@ const rotVal = document.getElementById("rotVal");
 function rotate(str, shift) {
   return str.replace(/[a-zA-Z]/g, c => {
     const base = c <= 'Z' ? 65 : 97;
-    return String.fromCharCode((c.charCodeAt(0) - base + shift + 26) % 26 + base);
+    return String.fromCharCode((c.charCodeAt(0) - base + shift) % 26 + base);
   });
 }
 
 function process() {
-  let shift = parseInt(slider.value);
-
-  if (mode === "decode") shift = -shift;
-
+  const shift = parseInt(slider.value);
   output.value = rotate(input.value, shift);
 }
 
-function toggleMode() {
-  mode = mode === "decode" ? "encode" : "decode";
-  const btn = document.getElementById("toggleBtn");
-
-  btn.textContent = "Mode: " + (mode === "decode" ? "Decode" : "Encode");
-  btn.classList.toggle("active");
-
-  process();
-}
-
-// live update while typing
+// live update
 input.addEventListener("input", process);
 
-// live update while sliding
 slider.addEventListener("input", () => {
   rotVal.textContent = slider.value;
   process();
