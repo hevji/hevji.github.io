@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>‎ </title>
+    <title>FutureTube - Next Gen Video Platform</title>
     <style>
         * {
             margin: 0;
@@ -13,427 +13,756 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0a0f;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a0a2e 100%);
             color: #e0e0e0;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
-        /* Animated grid background */
+        /* Animated Background */
         body::before {
             content: '';
-            position: absolute;
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: 
-                linear-gradient(rgba(88, 101, 242, 0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(88, 101, 242, 0.1) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 20s linear infinite;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 70%, rgba(0, 191, 255, 0.1) 0%, transparent 50%);
             pointer-events: none;
-        }
-
-        @keyframes gridMove {
-            0% {
-                transform: translate(0, 0);
-            }
-            100% {
-                transform: translate(50px, 50px);
-            }
-        }
-
-        /* Glow orbs */
-        .glow-orb {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(60px);
-            opacity: 0.3;
-            pointer-events: none;
-            animation: float 15s ease-in-out infinite;
-        }
-
-        .glow-orb-1 {
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, #5865f2, transparent);
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .glow-orb-2 {
-            width: 250px;
-            height: 250px;
-            background: radial-gradient(circle, #eb459e, transparent);
-            bottom: 15%;
-            right: 15%;
-            animation-delay: 3s;
-        }
-
-        .glow-orb-3 {
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, #5865f2, transparent);
-            top: 50%;
-            left: 50%;
-            animation-delay: 6s;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(30px, -30px) scale(1.1);
-            }
-            66% {
-                transform: translate(-20px, 20px) scale(0.9);
-            }
+            z-index: 0;
         }
 
         .container {
             position: relative;
             z-index: 1;
-            background: rgba(20, 20, 30, 0.8);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: rgba(15, 15, 25, 0.8);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(88, 101, 242, 0.2);
-            border-radius: 20px;
-            padding: 40px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 
-                0 8px 32px rgba(0, 0, 0, 0.4),
-                0 0 0 1px rgba(88, 101, 242, 0.1),
-                inset 0 0 60px rgba(88, 101, 242, 0.05);
-            animation: slideIn 0.5s ease-out;
+            border-bottom: 1px solid rgba(138, 43, 226, 0.3);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 35px;
-        }
-
-        .header h1 {
+        .logo {
             font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #5865f2, #eb459e);
+            font-weight: bold;
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 10px;
-            animation: glow 2s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(138, 43, 226, 0.5);
+            cursor: pointer;
+            transition: transform 0.3s;
         }
 
-        @keyframes glow {
-            0%, 100% {
-                filter: drop-shadow(0 0 10px rgba(88, 101, 242, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 20px rgba(88, 101, 242, 0.8));
-            }
+        .logo:hover {
+            transform: scale(1.05);
         }
 
-        .header p {
-            color: #a0a0b0;
-            font-size: 14px;
+        .search-container {
+            flex: 1;
+            max-width: 600px;
+            margin: 0 40px;
         }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #b0b0c0;
-        }
-
-        input {
+        .search-bar {
             width: 100%;
-            padding: 14px 18px;
+            padding: 12px 20px;
             background: rgba(30, 30, 45, 0.6);
-            border: 1px solid rgba(88, 101, 242, 0.3);
-            border-radius: 10px;
+            border: 2px solid rgba(138, 43, 226, 0.4);
+            border-radius: 30px;
             color: #e0e0e0;
-            font-size: 14px;
-            transition: all 0.3s ease;
+            font-size: 15px;
             outline: none;
+            transition: all 0.3s;
         }
 
-        input:focus {
-            background: rgba(30, 30, 45, 0.8);
-            border-color: #5865f2;
-            box-shadow: 0 0 0 3px rgba(88, 101, 242, 0.1);
+        .search-bar:focus {
+            border-color: #8a2be2;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+            background: rgba(30, 30, 45, 0.9);
         }
 
-        input::placeholder {
-            color: #606070;
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
         }
 
-        .button {
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.6);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: rgba(15, 15, 25, 0.6);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(138, 43, 226, 0.2);
+            padding: 20px 0;
+            position: sticky;
+            top: 70px;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .sidebar-item {
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(138, 43, 226, 0.2);
+            border-left-color: #8a2be2;
+            box-shadow: inset 0 0 20px rgba(138, 43, 226, 0.1);
+        }
+
+        .sidebar-item.active {
+            background: rgba(138, 43, 226, 0.3);
+            border-left-color: #8a2be2;
+        }
+
+        .sidebar-icon {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        /* Video Grid */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        /* Video Card */
+        .video-card {
+            background: rgba(20, 20, 35, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(138, 43, 226, 0.6);
+            box-shadow: 0 16px 48px rgba(138, 43, 226, 0.3);
+        }
+
+        .thumbnail-container {
+            position: relative;
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #5865f2, #4752c4);
-            border: none;
-            border-radius: 10px;
-            color: white;
+            padding-top: 56.25%;
+            overflow: hidden;
+            background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+        }
+
+        .thumbnail {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s;
+        }
+
+        .video-card:hover .thumbnail {
+            transform: scale(1.1);
+        }
+
+        .duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            border: 1px solid rgba(138, 43, 226, 0.4);
+        }
+
+        .video-info {
+            padding: 15px;
+        }
+
+        .video-title {
             font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
             overflow: hidden;
+            color: #ffffff;
         }
 
-        .button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .button:hover::before {
-            width: 300px;
-            height: 300px;
-        }
-
-        .button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
-        }
-
-        .button:active {
-            transform: translateY(0);
-        }
-
-        .button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .button span {
-            position: relative;
-            z-index: 1;
-        }
-
-        .status {
-            margin-top: 20px;
-            padding: 14px;
-            border-radius: 10px;
+        .channel-name {
+            color: #b0b0b0;
             font-size: 14px;
-            text-align: center;
-            animation: fadeIn 0.3s ease;
+            margin-bottom: 4px;
+        }
+
+        .video-stats {
+            color: #808080;
+            font-size: 13px;
+        }
+
+        /* Video Page */
+        .video-page {
             display: none;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .status.success {
-            background: rgba(67, 181, 129, 0.1);
-            border: 1px solid rgba(67, 181, 129, 0.3);
-            color: #43b581;
+        .video-page.active {
             display: block;
         }
 
-        .status.error {
-            background: rgba(240, 71, 71, 0.1);
-            border: 1px solid rgba(240, 71, 71, 0.3);
-            color: #f04747;
-            display: block;
+        .video-player-section {
+            background: rgba(15, 15, 25, 0.8);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
         }
 
-        .status.info {
-            background: rgba(88, 101, 242, 0.1);
-            border: 1px solid rgba(88, 101, 242, 0.3);
-            color: #5865f2;
-            display: block;
+        .video-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 40px rgba(138, 43, 226, 0.3);
         }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
+        .video-player iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+        .video-details {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
         }
 
-        .footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 12px;
-            color: #606070;
+        .video-main {
+            flex: 1;
         }
 
-        .warning {
-            background: rgba(250, 166, 26, 0.1);
-            border: 1px solid rgba(250, 166, 26, 0.3);
-            border-radius: 10px;
-            padding: 12px;
-            margin-bottom: 25px;
-            font-size: 13px;
-            color: #faa61a;
+        .video-title-large {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #ffffff;
+        }
+
+        .channel-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(20, 20, 35, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            margin-bottom: 20px;
         }
 
-        .warning::before {
-            content: '⚠️';
+        .channel-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+        }
+
+        .channel-details h3 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .channel-details p {
+            font-size: 13px;
+            color: #808080;
+        }
+
+        .description-box {
+            background: rgba(20, 20, 35, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+            line-height: 1.6;
+        }
+
+        .recommended-section {
+            width: 380px;
+        }
+
+        .recommended-title {
             font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-left: 5px;
+        }
+
+        .recommended-video {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(20, 20, 35, 0.6);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(138, 43, 226, 0.2);
+        }
+
+        .recommended-video:hover {
+            background: rgba(138, 43, 226, 0.2);
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.2);
+        }
+
+        .recommended-thumbnail {
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+        }
+
+        .recommended-info {
+            flex: 1;
+        }
+
+        .recommended-info h4 {
+            font-size: 14px;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .recommended-info p {
+            font-size: 12px;
+            color: #808080;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(138, 43, 226, 0.4);
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(138, 43, 226, 0.6);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .video-details {
+                flex-direction: column;
+            }
+
+            .recommended-section {
+                width: 100%;
+            }
+
+            .recommended-video {
+                max-width: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-container {
+                margin: 0 20px;
+            }
+
+            .navbar {
+                padding: 15px 15px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(20, 20, 35, 0.4);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #9a3bf2, #10cfff);
+        }
+
+        /* Loading Animation */
+        .glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+            }
+            to {
+                text-shadow: 0 0 30px rgba(138, 43, 226, 0.8), 0 0 40px rgba(0, 191, 255, 0.5);
+            }
         }
     </style>
 </head>
 <body>
-    <div class="glow-orb glow-orb-1"></div>
-    <div class="glow-orb glow-orb-2"></div>
-    <div class="glow-orb glow-orb-3"></div>
-
     <div class="container">
-        <div class="header">
-            <h1>Discord Webhook Deleter</h1>
-            <p>Securely remove Discord webhooks</p>
-        </div>
-
-        <div class="warning">
-            This action is permanent and cannot be undone.
-        </div>
-
-        <form id="deleteForm">
-            <div class="form-group">
-                <label for="webhookUrl">Webhook URL</label>
-                <input 
-                    type="text" 
-                    id="webhookUrl" 
-                    placeholder="https://discord.com/api/webhooks/..." 
-                    required
-                >
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="logo glow" onclick="showHomePage()">⚡ FutureTube</div>
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search the future...">
             </div>
+            <div class="profile-icon">👤</div>
+        </nav>
 
-            <button type="submit" class="button" id="deleteBtn">
-                <span>Delete Webhook</span>
-            </button>
-        </form>
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-item active">
+                    <div class="sidebar-icon">🏠</div>
+                    <span>Home</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">🔥</div>
+                    <span>Trending</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">📚</div>
+                    <span>Library</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">🎵</div>
+                    <span>Music</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">🎮</div>
+                    <span>Gaming</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">📺</div>
+                    <span>Live</span>
+                </div>
+                <div class="sidebar-item">
+                    <div class="sidebar-icon">⚙️</div>
+                    <span>Settings</span>
+                </div>
+            </aside>
 
-        <div id="status" class="status"></div>
+            <!-- Content Area -->
+            <main class="content">
+                <!-- Home Page -->
+                <div id="homePage" class="home-page">
+                    <div class="video-grid" id="videoGrid"></div>
+                </div>
 
-        <div class="footer">
-            Made with modern web technologies
+                <!-- Video Page -->
+                <div id="videoPage" class="video-page">
+                    <button class="back-button" onclick="showHomePage()">← Back to Home</button>
+                    
+                    <div class="video-player-section">
+                        <div class="video-player" id="videoPlayer"></div>
+                    </div>
+
+                    <div class="video-details">
+                        <div class="video-main">
+                            <h1 class="video-title-large" id="videoTitleLarge"></h1>
+                            
+                            <div class="channel-info">
+                                <div class="channel-avatar"></div>
+                                <div class="channel-details">
+                                    <h3 id="channelName"></h3>
+                                    <p id="channelSubs"></p>
+                                </div>
+                            </div>
+
+                            <div class="description-box">
+                                <p id="videoDescription"></p>
+                            </div>
+                        </div>
+
+                        <div class="recommended-section">
+                            <h3 class="recommended-title">Recommended</h3>
+                            <div id="recommendedVideos"></div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
     </div>
 
     <script>
-        const form = document.getElementById('deleteForm');
-        const webhookInput = document.getElementById('webhookUrl');
-        const deleteBtn = document.getElementById('deleteBtn');
-        const statusDiv = document.getElementById('status');
+        // Sample video data
+        const videos = [
+            {
+                id: 'dQw4w9WgXcQ',
+                title: 'The Future of AI: A Deep Dive into Neural Networks',
+                channel: 'Tech Visionary',
+                views: '2.4M views',
+                duration: '15:42',
+                subscribers: '1.2M subscribers',
+                description: 'Explore the cutting-edge developments in artificial intelligence and neural networks. This comprehensive guide takes you through the latest breakthroughs in machine learning, deep learning architectures, and the future implications of AI technology. Perfect for tech enthusiasts and professionals alike!'
+            },
+            {
+                id: 'jNQXAC9IVRw',
+                title: 'Cyberpunk City Ambience - Rain & Neon Lights [4K]',
+                channel: 'Ambient Worlds',
+                views: '5.1M views',
+                duration: '2:15:30',
+                subscribers: '890K subscribers',
+                description: 'Immerse yourself in a futuristic cyberpunk cityscape with rain sounds and neon lights. Perfect for studying, working, or relaxing. This 4K ambience video features stunning visuals and high-quality audio for the ultimate atmospheric experience.'
+            },
+            {
+                id: 'M7lc1UVf-VE',
+                title: 'Building a Quantum Computer from Scratch',
+                channel: 'Quantum Labs',
+                views: '1.8M views',
+                duration: '28:15',
+                subscribers: '2.3M subscribers',
+                description: 'Join us on an incredible journey as we build a quantum computer from the ground up. Learn about qubits, quantum entanglement, and the revolutionary technology that will shape our future. This detailed tutorial covers both theory and practical implementation.'
+            },
+            {
+                id: '9bZkp7q19f0',
+                title: 'Space Exploration 2050: Mars Colony Documentary',
+                channel: 'Cosmic Discoveries',
+                views: '3.6M views',
+                duration: '45:20',
+                subscribers: '1.7M subscribers',
+                description: 'A stunning documentary exploring humanitys journey to Mars and the establishment of the first permanent colony on the red planet. Featuring interviews with leading scientists, engineers, and astronauts, this film showcases the technology and determination that will make interplanetary living a reality.'
+            },
+            {
+                id: 'QH2-TGUlwu4',
+                title: 'Synthwave Mix 2024 - Retro Future Vibes',
+                channel: 'Electronic Dreams',
+                views: '4.2M views',
+                duration: '1:32:45',
+                subscribers: '3.1M subscribers',
+                description: 'The ultimate synthwave and retrowave mix featuring the best tracks of 2024. Let the nostalgic 80s-inspired electronic music take you on a journey through neon-lit highways and digital landscapes. Perfect for driving, gaming, or just vibing.'
+            },
+            {
+                id: 'kJQP7kiw5Fk',
+                title: 'How Holograms Will Change Everything',
+                channel: 'Future Tech Today',
+                views: '1.3M views',
+                duration: '18:33',
+                subscribers: '950K subscribers',
+                description: 'Discover how holographic technology is revolutionizing entertainment, education, and communication. From holographic concerts to medical training simulations, explore the incredible applications of this groundbreaking technology and what it means for our future.'
+            },
+            {
+                id: '2Vv-BfVoq4g',
+                title: 'Virtual Reality Gaming Setup Tour 2024',
+                channel: 'VR Gaming Pro',
+                views: '890K views',
+                duration: '12:08',
+                subscribers: '1.4M subscribers',
+                description: 'Take a tour of the ultimate VR gaming setup featuring the latest headsets, haptic suits, and omnidirectional treadmills. See how immersive gaming has evolved and get recommendations for building your own next-gen gaming room.'
+            },
+            {
+                id: 'yPYZpwSpKmA',
+                title: 'Drone Racing Championship 2024 - Final Race',
+                channel: 'Extreme Drone Sports',
+                views: '2.7M views',
+                duration: '22:17',
+                subscribers: '2.8M subscribers',
+                description: 'Watch the most intense drone racing competition of the year! Pilots navigate through challenging obstacles at breakneck speeds in this thrilling championship final. Experience the future of competitive sports with cutting-edge FPV drone technology.'
+            },
+            {
+                id: 'uelHwf8o7_U',
+                title: 'Biohacking Your Body: Ultimate Performance Guide',
+                channel: 'Optimized Human',
+                views: '1.5M views',
+                duration: '35:42',
+                subscribers: '780K subscribers',
+                description: 'Learn the science-backed methods for optimizing your body and mind through biohacking. From nootropics to sleep optimization, discover cutting-edge techniques used by top performers to enhance cognitive function, physical performance, and overall well-being.'
+            },
+            {
+                id: 'PT2_F-1esPk',
+                title: 'Electric Vehicle Revolution: The Future of Transportation',
+                channel: 'Green Tech Channel',
+                views: '3.1M views',
+                duration: '26:54',
+                subscribers: '1.9M subscribers',
+                description: 'Explore how electric vehicles are transforming the automotive industry and reshaping our cities. This comprehensive overview covers the latest EV technology, charging infrastructure, battery innovations, and the environmental impact of the electric revolution.'
+            },
+            {
+                id: 'L_jWHffIx5E',
+                title: '3D Printing Revolution: Making Anything at Home',
+                channel: 'Maker Space',
+                views: '980K views',
+                duration: '19:28',
+                subscribers: '1.1M subscribers',
+                description: 'Discover the incredible world of 3D printing and how it is democratizing manufacturing. Learn about the latest printers, materials, and techniques that allow you to create anything from custom tools to artistic sculptures right in your own home.'
+            },
+            {
+                id: 'dMH0bHeiRNg',
+                title: 'Smart Home Tour 2024 - Fully Automated Living',
+                channel: 'Smart Living',
+                views: '2.2M views',
+                duration: '24:11',
+                subscribers: '1.6M subscribers',
+                description: 'Step inside a fully automated smart home featuring the latest in IoT devices, AI assistants, and home automation systems. See how technology seamlessly integrates into every aspect of daily living for maximum comfort, security, and efficiency.'
+            }
+        ];
 
-        function showStatus(message, type) {
-            statusDiv.textContent = message;
-            statusDiv.className = `status ${type}`;
-            statusDiv.style.display = 'block';
+        // Generate video grid
+        function generateVideoGrid() {
+            const videoGrid = document.getElementById('videoGrid');
+            videoGrid.innerHTML = videos.map((video, index) => `
+                <div class="video-card" onclick="playVideo(${index})">
+                    <div class="thumbnail-container">
+                        <img src="https://img.youtube.com/vi/${video.id}/maxresdefault.jpg" 
+                             alt="${video.title}" 
+                             class="thumbnail"
+                             onerror="this.src='https://img.youtube.com/vi/${video.id}/hqdefault.jpg'">
+                        <span class="duration">${video.duration}</span>
+                    </div>
+                    <div class="video-info">
+                        <h3 class="video-title">${video.title}</h3>
+                        <p class="channel-name">${video.channel}</p>
+                        <p class="video-stats">${video.views}</p>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        function hideStatus() {
-            statusDiv.style.display = 'none';
-        }
-
-        function validateWebhookUrl(url) {
-            const webhookPattern = /^https:\/\/(discord\.com|discordapp\.com)\/api\/webhooks\/\d+\/[\w-]+$/;
-            return webhookPattern.test(url);
-        }
-
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Play video
+        function playVideo(index) {
+            const video = videos[index];
             
-            const webhookUrl = webhookInput.value.trim();
+            // Update video player
+            document.getElementById('videoPlayer').innerHTML = `
+                <iframe src="https://www.youtube.com/embed/${video.id}?autoplay=1" 
+                        allowfullscreen 
+                        allow="autoplay; encrypted-media"></iframe>
+            `;
             
-            // Validate URL
-            if (!validateWebhookUrl(webhookUrl)) {
-                showStatus('Invalid webhook URL format', 'error');
-                return;
-            }
+            // Update video details
+            document.getElementById('videoTitleLarge').textContent = video.title;
+            document.getElementById('channelName').textContent = video.channel;
+            document.getElementById('channelSubs').textContent = video.subscribers;
+            document.getElementById('videoDescription').textContent = video.description;
+            
+            // Generate recommended videos (excluding current video)
+            const recommendedVideos = videos
+                .filter((_, i) => i !== index)
+                .slice(0, 8)
+                .map((recVideo, recIndex) => {
+                    const actualIndex = videos.findIndex(v => v.id === recVideo.id);
+                    return `
+                        <div class="recommended-video" onclick="playVideo(${actualIndex})">
+                            <img src="https://img.youtube.com/vi/${recVideo.id}/hqdefault.jpg" 
+                                 alt="${recVideo.title}" 
+                                 class="recommended-thumbnail">
+                            <div class="recommended-info">
+                                <h4>${recVideo.title}</h4>
+                                <p>${recVideo.channel}</p>
+                                <p>${recVideo.views}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            
+            document.getElementById('recommendedVideos').innerHTML = recommendedVideos;
+            
+            // Show video page
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('videoPage').classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-            // Disable button and show loading
-            deleteBtn.disabled = true;
-            deleteBtn.innerHTML = '<span><span class="loading-spinner"></span>Deleting...</span>';
-            hideStatus();
+        // Show home page
+        function showHomePage() {
+            document.getElementById('videoPage').classList.remove('active');
+            document.getElementById('homePage').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-            try {
-                const response = await fetch(webhookUrl, {
-                    method: 'DELETE'
-                });
-
-                if (response.ok || response.status === 204) {
-                    showStatus('✓ Webhook deleted successfully!', 'success');
-                    webhookInput.value = '';
-                } else if (response.status === 404) {
-                    showStatus('Webhook not found or already deleted', 'error');
-                } else if (response.status === 401 || response.status === 403) {
-                    showStatus('Unauthorized - Invalid webhook URL', 'error');
-                } else {
-                    showStatus(`Failed to delete webhook (Status: ${response.status})`, 'error');
-                }
-            } catch (error) {
-                showStatus('Network error - Please check your connection', 'error');
-                console.error('Error:', error);
-            } finally {
-                deleteBtn.disabled = false;
-                deleteBtn.innerHTML = '<span>Delete Webhook</span>';
-            }
-        });
-
-        // Clear status on input change
-        webhookInput.addEventListener('input', () => {
-            if (statusDiv.style.display === 'block') {
-                hideStatus();
-            }
-        });
+        // Initialize
+        generateVideoGrid();
     </script>
 </body>
 </html>
