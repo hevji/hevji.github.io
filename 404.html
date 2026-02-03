@@ -1,57 +1,442 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 - Page Not Found</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>404 — Lost in the Void</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400&display=swap" rel="stylesheet"/>
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #121212;
-    background-image: 
-      linear-gradient(#2a2a2a 1px, transparent 1px),
-      linear-gradient(90deg, #2a2a2a 1px, transparent 1px);
-    background-size: 40px 40px;
-    font-family: Arial, sans-serif;
-    color: #fff;
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #060610;
+    --accent: #ff6b6b;
+    --accent2: #ffd93d;
+    --accent3: #6bcbff;
+    --text: #e8e8f0;
+    --muted: rgba(255,255,255,0.18);
   }
 
-  h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
+  html, body {
+    height: 100%; overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    cursor: none;
   }
 
-  p {
-    font-size: 1.2rem;
+  /* ── Custom Cursor ── */
+  .cursor {
+    position: fixed; width: 20px; height: 20px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor.hover {
+    width: 50px; height: 50px;
+    background: rgba(255,107,107,0.25);
+    border-color: var(--accent2);
   }
 
-  a {
-    margin-top: 20px;
-    padding: 12px 25px;
-    border: 1px solid #555;
-    border-radius: 8px;
-    background-color: #1e1e1e;
-    color: #fff;
+  /* ── Canvas BG ── */
+  canvas { position: fixed; inset: 0; z-index: 0; }
+
+  /* ── Blob ── */
+  .blob {
+    position: fixed; width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 40%, rgba(107,203,255,0.22), transparent 70%),
+                radial-gradient(circle at 70% 60%, rgba(255,107,107,0.18), transparent 70%);
+    filter: blur(80px);
+    pointer-events: none; z-index: 1;
+    animation: blobMorph 8s ease-in-out infinite alternate;
+    transition: left 0.12s ease-out, top 0.12s ease-out;
+  }
+  @keyframes blobMorph {
+    0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: scale(1); }
+    25%  { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    50%  { border-radius: 50% 60% 30% 40% / 40% 50% 60% 50%; transform: scale(1.08); }
+    75%  { border-radius: 40% 40% 60% 50% / 60% 40% 50% 40%; }
+    100% { border-radius: 60% 30% 50% 40% / 30% 70% 40% 60%; transform: scale(0.95); }
+  }
+
+  /* ── Layout ── */
+  .scene {
+    position: relative; z-index: 2;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 0;
+  }
+
+  /* ── 404 Big Number ── */
+  .code-wrap {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px;
+  }
+  .code-wrap .digit {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(160px, 28vw, 320px);
+    line-height: 0.85;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+    filter: drop-shadow(0 0 40px rgba(255,107,107,0.35));
+  }
+  .code-wrap .digit:nth-child(1) { animation-delay: 0.1s; }
+  .code-wrap .digit:nth-child(2) { animation-delay: 0.25s; }
+  .code-wrap .digit:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes popIn {
+    0%   { opacity: 0; transform: scale(0.4) translateY(40px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  /* Glitch on hover */
+  .code-wrap:hover .digit:nth-child(2) {
+    animation: glitch 0.4s steps(2) infinite;
+  }
+  @keyframes glitch {
+    0%   { transform: translate(0); }
+    20%  { transform: translate(-8px, 3px); filter: drop-shadow(-6px 0 6px var(--accent)); }
+    40%  { transform: translate(8px, -2px); filter: drop-shadow(6px 0 6px var(--accent3)); }
+    60%  { transform: translate(-4px, -4px); }
+    80%  { transform: translate(5px, 4px); filter: drop-shadow(0 0 12px var(--accent2)); }
+    100% { transform: translate(0); }
+  }
+
+  /* ── Headline ── */
+  .headline {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: clamp(18px, 3.5vw, 30px);
+    letter-spacing: 0.04em;
+    color: var(--text);
+    opacity: 0;
+    animation: fadeUp 0.7s 0.7s cubic-bezier(.25,.46,.45,.94) forwards;
+    text-align: center;
+    padding: 0 20px;
+  }
+  .headline span {
+    color: var(--accent);
+  }
+
+  /* ── Sub text ── */
+  .sub {
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+    font-size: clamp(13px, 1.6vw, 16px);
+    color: var(--muted);
+    margin-top: 12px;
+    letter-spacing: 0.06em;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.9s cubic-bezier(.25,.46,.45,.94) forwards;
+    text-align: center;
+    max-width: 420px;
+    padding: 0 24px;
+    line-height: 1.6;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CTA Button ── */
+  .btn-wrap {
+    margin-top: 44px;
+    opacity: 0;
+    animation: fadeUp 0.7s 1.15s cubic-bezier(.25,.46,.45,.94) forwards;
+  }
+  .btn {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 16px 36px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(14px);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.08em;
     text-decoration: none;
-    font-weight: bold;
-    box-shadow: 0 0 15px #fff;
-    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    overflow: hidden;
+    transition: border-color 0.35s, box-shadow 0.35s, transform 0.2s;
+    cursor: none;
+  }
+  .btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 0;
+  }
+  .btn:hover::before { opacity: 0.15; }
+  .btn:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(255,107,107,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+  .btn:active { transform: translateY(0); }
+  .btn span, .btn svg { position: relative; z-index: 1; }
+  .btn svg { width: 18px; height: 18px; transition: transform 0.3s; }
+  .btn:hover svg { transform: translateX(4px); }
+
+  /* ── Floating tags ── */
+  .tags {
+    position: fixed; inset: 0; pointer-events: none; z-index: 1;
+  }
+  .tag {
+    position: absolute;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 300;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    white-space: nowrap;
+    animation: floatTag linear infinite;
+  }
+  @keyframes floatTag {
+    0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(-10deg); opacity: 0; }
   }
 
-  a:hover {
-    box-shadow: 0 0 20px #fff;
-    border-color: #fff;
+  /* ── Scanlines overlay ── */
+  .scanlines {
+    position: fixed; inset: 0; z-index: 3;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.06) 2px,
+      rgba(0,0,0,0.06) 4px
+    );
+  }
+
+  /* ── Corner decorations ── */
+  .corner {
+    position: fixed;
+    width: 60px; height: 60px;
+    border-color: var(--muted);
+    border-style: solid;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    animation: fadeIn 1s 1.4s forwards;
+  }
+  .corner.tl { top: 30px; left: 30px; border-width: 2px 0 0 2px; border-radius: 6px 0 0 0; }
+  .corner.tr { top: 30px; right: 30px; border-width: 2px 2px 0 0; border-radius: 0 6px 0 0; }
+  .corner.bl { bottom: 30px; left: 30px; border-width: 0 0 2px 2px; border-radius: 0 0 0 6px; }
+  .corner.br { bottom: 30px; right: 30px; border-width: 0 2px 2px 0; border-radius: 0 0 6px 0; }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* ── Bottom status bar ── */
+  .statusbar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 36px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    z-index: 5;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.12);
+    opacity: 0;
+    animation: fadeIn 1s 1.6s forwards;
+  }
+  .statusbar .dot {
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--accent);
+    margin-right: 8px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
   }
 </style>
 </head>
 <body>
-  <h1>404</h1>
-  <p>Oops! The page you are looking for does not exist.</p>
-  <a href="https://hevji.github.io/">Go Back Home</a>
+
+<!-- Canvas for particle field -->
+<canvas id="canvas"></canvas>
+
+<!-- Ambient blob that follows mouse -->
+<div class="blob" id="blob"></div>
+
+<!-- Scanline overlay -->
+<div class="scanlines"></div>
+
+<!-- Corner brackets -->
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<!-- Floating background tags -->
+<div class="tags" id="tags"></div>
+
+<!-- Main content -->
+<div class="scene">
+  <div class="code-wrap">
+    <span class="digit">4</span>
+    <span class="digit">0</span>
+    <span class="digit">4</span>
+  </div>
+  <div class="headline">The page you're looking for <span>doesn't exist.</span></div>
+  <div class="sub">It may have been moved, renamed, or removed entirely.<br/>But don't worry — let's get you somewhere real.</div>
+  <div class="btn-wrap">
+    <a href="/" class="btn">
+      <span>Back to Home</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<!-- Status bar -->
+<div class="statusbar">
+  <div><span class="dot"></span>System Status: Page Not Found</div>
+  <div>Error Code — 404</div>
+</div>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+
+<script>
+// ── Custom Cursor ──
+const cursor = document.getElementById('cursor');
+let mx = -100, my = -100;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+document.querySelectorAll('.btn, .code-wrap').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
+
+// ── Blob follow ──
+const blob = document.getElementById('blob');
+let bx = window.innerWidth/2, by = window.innerHeight/2;
+function animBlob() {
+  bx += (mx - bx - blob.offsetWidth/2) * 0.06;
+  by += (my - by - blob.offsetHeight/2) * 0.06;
+  blob.style.left = bx + 'px';
+  blob.style.top  = by + 'px';
+  requestAnimationFrame(animBlob);
+}
+animBlob();
+
+// ── Particle Canvas ──
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 40;
+    this.size = Math.random() * 2.2 + 0.4;
+    this.speedY = -(Math.random() * 0.6 + 0.15);
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.opacity = 0;
+    this.maxOp = Math.random() * 0.5 + 0.15;
+    this.life = 0;
+    this.maxLife = Math.random() * 120 + 80;
+    // color: pick from accent palette
+    const cols = ['255,107,107','255,217,61','107,203,255','180,140,255'];
+    this.color = cols[Math.floor(Math.random()*cols.length)];
+  }
+  update() {
+    this.life++;
+    if (this.life < this.maxLife * 0.15) this.opacity = (this.life / (this.maxLife * 0.15)) * this.maxOp;
+    else if (this.life > this.maxLife * 0.75) this.opacity = ((this.maxLife - this.life) / (this.maxLife * 0.25)) * this.maxOp;
+    else this.opacity = this.maxOp;
+
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.life >= this.maxLife) this.reset(false);
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${this.color},${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+// seed
+for (let i = 0; i < 70; i++) particles.push(new Particle());
+
+function loop() {
+  ctx.clearRect(0,0,W,H);
+  // subtle vignette
+  const grd = ctx.createRadialGradient(W/2,H/2,H*0.2, W/2,H/2,H*0.85);
+  grd.addColorStop(0,'rgba(6,6,16,0)');
+  grd.addColorStop(1,'rgba(6,6,16,0.55)');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0,0,W,H);
+
+  particles.forEach(p => { p.update(); p.draw(); });
+
+  // draw faint connection lines near mouse
+  particles.forEach(p => {
+    const dx = p.x - mx, dy = p.y - my;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    if (dist < 120) {
+      ctx.beginPath();
+      ctx.moveTo(mx, my);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = `rgba(${p.color},${0.18 * (1 - dist/120)})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    }
+  });
+
+  requestAnimationFrame(loop);
+}
+loop();
+
+// ── Floating Tags ──
+const tagTexts = ['error','undefined','null','void','NaN','lost','ghost','0x404','empty','unknown','ghost page','unreachable','dark matter','infinity'];
+const tagsEl = document.getElementById('tags');
+tagTexts.forEach((t,i) => {
+  const el = document.createElement('div');
+  el.className = 'tag';
+  el.textContent = t;
+  el.style.left = (Math.random()*85)+5 + 'vw';
+  el.style.bottom = '-40px';
+  const dur = 12 + Math.random()*12;
+  const delay = Math.random()*dur;
+  el.style.animation = `floatTag ${dur}s ${-delay}s linear infinite`;
+  tagsEl.appendChild(el);
+});
+</script>
 </body>
 </html>
