@@ -1,99 +1,673 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Markdown Editor</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Markdown Editor — Live Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@300;400;500;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet"/>
 <style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
-  .tabs { display: flex; background: #333; }
-  .tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; color: white; }
-  .tab.active { background: #555; font-weight: bold; }
-  .container { padding: 20px; }
-  textarea { width: 100%; height: 300px; font-family: monospace; font-size: 16px; padding: 10px; }
-  #preview { border: 1px solid #ccc; padding: 10px; background: white; height: 300px; overflow-y: auto; }
-  select { margin-bottom: 10px; padding: 5px; }
-  .cheat-sheet { margin-top: 20px; background: #eee; padding: 10px; border-radius: 5px; }
-  .cheat-sheet h3 { margin-top: 0; }
-  code { background: #ddd; padding: 2px 4px; border-radius: 3px; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #060610;
+    --accent: #ff6b6b;
+    --accent2: #ffd93d;
+    --accent3: #6bcbff;
+    --text: #e8e8f0;
+    --muted: rgba(255,255,255,0.18);
+    --panel-bg: rgba(255,255,255,0.03);
+    --panel-border: rgba(255,255,255,0.08);
+  }
+
+  html, body {
+    height: 100%; overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    cursor: none;
+  }
+
+  /* ── Custom Cursor ── */
+  .cursor {
+    position: fixed; width: 20px; height: 20px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.08s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor.hover {
+    width: 50px; height: 50px;
+    background: rgba(255,107,107,0.25);
+    border-color: var(--accent2);
+  }
+
+  /* ── Canvas BG ── */
+  canvas { position: fixed; inset: 0; z-index: 0; }
+
+  /* ── Blob ── */
+  .blob {
+    position: fixed; width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 40%, rgba(107,203,255,0.22), transparent 70%),
+                radial-gradient(circle at 70% 60%, rgba(255,107,107,0.18), transparent 70%);
+    filter: blur(80px);
+    pointer-events: none; z-index: 1;
+    animation: blobMorph 8s ease-in-out infinite alternate;
+    transition: left 0.12s ease-out, top 0.12s ease-out;
+  }
+  @keyframes blobMorph {
+    0%   { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; transform: scale(1); }
+    25%  { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    50%  { border-radius: 50% 60% 30% 40% / 40% 50% 60% 50%; transform: scale(1.08); }
+    75%  { border-radius: 40% 40% 60% 50% / 60% 40% 50% 40%; }
+    100% { border-radius: 60% 30% 50% 40% / 30% 70% 40% 60%; transform: scale(0.95); }
+  }
+
+  /* ── Scanlines overlay ── */
+  .scanlines {
+    position: fixed; inset: 0; z-index: 3;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.06) 2px,
+      rgba(0,0,0,0.06) 4px
+    );
+  }
+
+  /* ── Corner decorations ── */
+  .corner {
+    position: fixed;
+    width: 60px; height: 60px;
+    border-color: var(--muted);
+    border-style: solid;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    animation: fadeIn 1s 0.6s forwards;
+  }
+  .corner.tl { top: 30px; left: 30px; border-width: 2px 0 0 2px; border-radius: 6px 0 0 0; }
+  .corner.tr { top: 30px; right: 30px; border-width: 2px 2px 0 0; border-radius: 0 6px 0 0; }
+  .corner.bl { bottom: 30px; left: 30px; border-width: 0 0 2px 2px; border-radius: 0 0 0 6px; }
+  .corner.br { bottom: 30px; right: 30px; border-width: 0 2px 2px 0; border-radius: 0 0 6px 0; }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  /* ── Layout ── */
+  .app {
+    position: relative; z-index: 2;
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    padding: 20px;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 30px;
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: slideDown 0.6s 0.2s cubic-bezier(.25,.46,.45,.94) forwards;
+  }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .actions {
+    display: flex; gap: 12px; align-items: center;
+  }
+
+  .btn {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 50px;
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(14px);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    overflow: hidden;
+    transition: border-color 0.35s, box-shadow 0.35s, transform 0.2s;
+    cursor: none;
+  }
+  .btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: 0;
+  }
+  .btn:hover::before { opacity: 0.15; }
+  .btn:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 30px rgba(255,107,107,0.25), inset 0 1px 0 rgba(255,255,255,0.1);
+    transform: translateY(-2px);
+  }
+  .btn:active { transform: translateY(0); }
+  .btn span, .btn svg { position: relative; z-index: 1; }
+  .btn svg { width: 16px; height: 16px; }
+
+  /* ── Main editor area ── */
+  .main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    min-height: 0;
+    opacity: 0;
+    animation: slideUp 0.7s 0.4s cubic-bezier(.25,.46,.45,.94) forwards;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .panel {
+    display: flex; flex-direction: column;
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+    backdrop-filter: blur(14px);
+    overflow: hidden;
+  }
+
+  .panel-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--panel-border);
+    background: rgba(255,255,255,0.02);
+  }
+
+  .panel-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 10px;
+  }
+
+  .panel-title::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+
+  .word-count {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  .panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+  }
+
+  /* ── Editor textarea ── */
+  #editor {
+    width: 100%;
+    height: 100%;
+    resize: none;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    cursor: text;
+  }
+  #editor::placeholder {
+    color: var(--muted);
+    opacity: 0.4;
+  }
+
+  /* ── Preview area ── */
+  #preview {
+    width: 100%;
+    min-height: 100%;
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* Markdown styling */
+  #preview h1, #preview h2, #preview h3, #preview h4, #preview h5, #preview h6 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    margin-top: 1.5em;
+    margin-bottom: 0.6em;
+    line-height: 1.3;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  #preview h1 { font-size: 2.2em; margin-top: 0; }
+  #preview h2 { font-size: 1.8em; }
+  #preview h3 { font-size: 1.5em; }
+  #preview h4 { font-size: 1.3em; }
+  #preview h5 { font-size: 1.1em; }
+  #preview h6 { font-size: 1em; }
+
+  #preview p {
+    margin-bottom: 1.2em;
+  }
+
+  #preview a {
+    color: var(--accent3);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(107,203,255,0.3);
+    transition: border-color 0.3s;
+  }
+  #preview a:hover {
+    border-bottom-color: var(--accent3);
+  }
+
+  #preview code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9em;
+    background: rgba(255,255,255,0.08);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent2);
+  }
+
+  #preview pre {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    padding: 16px;
+    overflow-x: auto;
+    margin: 1.5em 0;
+  }
+
+  #preview pre code {
+    background: none;
+    padding: 0;
+    color: var(--text);
+  }
+
+  #preview blockquote {
+    border-left: 3px solid var(--accent);
+    padding-left: 20px;
+    margin: 1.5em 0;
+    color: rgba(255,255,255,0.7);
+    font-style: italic;
+  }
+
+  #preview ul, #preview ol {
+    margin: 1.2em 0;
+    padding-left: 2em;
+  }
+
+  #preview li {
+    margin-bottom: 0.5em;
+  }
+
+  #preview hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--muted), transparent);
+    margin: 2em 0;
+  }
+
+  #preview img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5em 0;
+  }
+
+  #preview table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5em 0;
+  }
+
+  #preview th, #preview td {
+    border: 1px solid var(--panel-border);
+    padding: 10px 14px;
+    text-align: left;
+  }
+
+  #preview th {
+    background: rgba(255,255,255,0.05);
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+  }
+
+  /* ── Scrollbar ── */
+  .panel-content::-webkit-scrollbar {
+    width: 8px;
+  }
+  .panel-content::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.02);
+  }
+  .panel-content::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+  }
+  .panel-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.15);
+  }
+
+  /* ── Status bar ── */
+  .statusbar {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 36px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px;
+    z-index: 5;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.12);
+    opacity: 0;
+    animation: fadeIn 1s 0.8s forwards;
+  }
+  .statusbar .dot {
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: var(--accent3);
+    margin-right: 8px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .main {
+      grid-template-columns: 1fr;
+    }
+    .panel:last-child {
+      display: none;
+    }
+    .toggle-preview {
+      display: inline-flex !important;
+    }
+  }
+
+  .toggle-preview {
+    display: none;
+  }
 </style>
 </head>
 <body>
 
-<div class="tabs">
-  <div class="tab active" id="editTab">Edit</div>
-  <div class="tab" id="previewTab">Preview</div>
-</div>
+<!-- Canvas for particle field -->
+<canvas id="canvas"></canvas>
 
-<div class="container">
-  <label for="mode">Markdown Mode:</label>
-  <select id="mode">
-    <option value="markdown">Markdown</option>
-    <option value="gfm">GitHub Flavored Markdown (GFM)</option>
-  </select>
+<!-- Ambient blob that follows mouse -->
+<div class="blob" id="blob"></div>
 
-  <textarea id="editor" placeholder="Write your markdown here..."></textarea>
-  <div id="preview" style="display:none;"></div>
+<!-- Scanline overlay -->
+<div class="scanlines"></div>
 
-  <div class="cheat-sheet">
-    <h3>Markdown Cheat Sheet</h3>
-    <ul>
-      <li><code># H1</code> → Heading 1</li>
-      <li><code>## H2</code> → Heading 2</li>
-      <li><code>**bold**</code> → Bold text</li>
-      <li><code>*italic*</code> → Italic text</li>
-      <li><code>- List item</code> → Unordered list</li>
-      <li><code>1. List item</code> → Ordered list</li>
-      <li><code>[Link](url)</code> → Link</li>
-      <li><code>![Alt](image_url)</code> → Image</li>
-      <li><code>`code`</code> → Inline code</li>
-      <li><code>```code```</code> → Code block</li>
-      <li><code>---</code> → Horizontal line</li>
-      <li>GFM Tables: <code>| Col1 | Col2 |</code></li>
-    </ul>
+<!-- Corner brackets -->
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<!-- App -->
+<div class="app">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">MARKDOWN.LIVE</div>
+    <div class="actions">
+      <button class="btn" id="clearBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+        <span>Clear</span>
+      </button>
+      <button class="btn" id="copyBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span>Copy</span>
+      </button>
+      <button class="btn toggle-preview" id="toggleBtn">
+        <span>Preview</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main editor -->
+  <div class="main">
+    <!-- Editor panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Editor</div>
+        <div class="word-count" id="wordCount">0 words · 0 chars</div>
+      </div>
+      <div class="panel-content">
+        <textarea id="editor" placeholder="# Start writing markdown...
+
+Try headings, **bold**, *italic*, `code`, lists, and more."></textarea>
+      </div>
+    </div>
+
+    <!-- Preview panel -->
+    <div class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Preview</div>
+      </div>
+      <div class="panel-content">
+        <div id="preview"></div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Include Marked.js -->
+<!-- Status bar -->
+<div class="statusbar">
+  <div><span class="dot"></span>System Status: Ready</div>
+  <div>Live Markdown Editor</div>
+</div>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+
+<!-- Marked.js for markdown parsing -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
 <script>
-  const editTab = document.getElementById('editTab');
-  const previewTab = document.getElementById('previewTab');
-  const editor = document.getElementById('editor');
-  const preview = document.getElementById('preview');
-  const modeSelect = document.getElementById('mode');
+// ── Custom Cursor ──
+const cursor = document.getElementById('cursor');
+let mx = -100, my = -100;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+document.querySelectorAll('.btn, a').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+});
 
-  function updatePreview() {
-    const markdownText = editor.value;
-    if(modeSelect.value === 'gfm') {
-      preview.innerHTML = marked.parse(markdownText, { gfm: true });
-    } else {
-      preview.innerHTML = marked.parse(markdownText, { gfm: false });
-    }
+// ── Blob follow ──
+const blob = document.getElementById('blob');
+let bx = window.innerWidth/2, by = window.innerHeight/2;
+function animBlob() {
+  bx += (mx - bx - blob.offsetWidth/2) * 0.06;
+  by += (my - by - blob.offsetHeight/2) * 0.06;
+  blob.style.left = bx + 'px';
+  blob.style.top  = by + 'px';
+  requestAnimationFrame(animBlob);
+}
+animBlob();
+
+// ── Particle Canvas ──
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [];
+
+function resize() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 40;
+    this.size = Math.random() * 2.2 + 0.4;
+    this.speedY = -(Math.random() * 0.6 + 0.15);
+    this.speedX = (Math.random() - 0.5) * 0.3;
+    this.opacity = 0;
+    this.maxOp = Math.random() * 0.5 + 0.15;
+    this.life = 0;
+    this.maxLife = Math.random() * 120 + 80;
+    const cols = ['255,107,107','255,217,61','107,203,255','180,140,255'];
+    this.color = cols[Math.floor(Math.random()*cols.length)];
   }
+  update() {
+    this.life++;
+    if (this.life < this.maxLife * 0.15) this.opacity = (this.life / (this.maxLife * 0.15)) * this.maxOp;
+    else if (this.life > this.maxLife * 0.75) this.opacity = ((this.maxLife - this.life) / (this.maxLife * 0.25)) * this.maxOp;
+    else this.opacity = this.maxOp;
 
-  editTab.addEventListener('click', () => {
-    editTab.classList.add('active');
-    previewTab.classList.remove('active');
-    editor.style.display = 'block';
-    preview.style.display = 'none';
+    this.x += this.speedX;
+    this.y += this.speedY;
+    if (this.life >= this.maxLife) this.reset(false);
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(${this.color},${this.opacity})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 70; i++) particles.push(new Particle());
+
+function loop() {
+  ctx.clearRect(0,0,W,H);
+  const grd = ctx.createRadialGradient(W/2,H/2,H*0.2, W/2,H/2,H*0.85);
+  grd.addColorStop(0,'rgba(6,6,16,0)');
+  grd.addColorStop(1,'rgba(6,6,16,0.55)');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0,0,W,H);
+
+  particles.forEach(p => { p.update(); p.draw(); });
+
+  particles.forEach(p => {
+    const dx = p.x - mx, dy = p.y - my;
+    const dist = Math.sqrt(dx*dx+dy*dy);
+    if (dist < 120) {
+      ctx.beginPath();
+      ctx.moveTo(mx, my);
+      ctx.lineTo(p.x, p.y);
+      ctx.strokeStyle = `rgba(${p.color},${0.18 * (1 - dist/120)})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    }
   });
 
-  previewTab.addEventListener('click', () => {
-    previewTab.classList.add('active');
-    editTab.classList.remove('active');
-    editor.style.display = 'none';
-    preview.style.display = 'block';
+  requestAnimationFrame(loop);
+}
+loop();
+
+// ── Markdown Editor ──
+const editor = document.getElementById('editor');
+const preview = document.getElementById('preview');
+const wordCount = document.getElementById('wordCount');
+const clearBtn = document.getElementById('clearBtn');
+const copyBtn = document.getElementById('copyBtn');
+
+// Configure marked options
+marked.setOptions({
+  breaks: true,
+  gfm: true,
+  headerIds: true,
+  mangle: false
+});
+
+// Load from localStorage
+const saved = localStorage.getItem('markdown-content');
+if (saved) {
+  editor.value = saved;
+  updatePreview();
+}
+
+function updatePreview() {
+  const markdown = editor.value;
+  preview.innerHTML = marked.parse(markdown);
+  
+  // Update word count
+  const text = markdown.trim();
+  const words = text ? text.split(/\s+/).length : 0;
+  const chars = text.length;
+  wordCount.textContent = `${words} words · ${chars} chars`;
+  
+  // Save to localStorage
+  localStorage.setItem('markdown-content', markdown);
+}
+
+editor.addEventListener('input', updatePreview);
+
+// Clear button
+clearBtn.addEventListener('click', () => {
+  if (confirm('Clear all content?')) {
+    editor.value = '';
     updatePreview();
-  });
+  }
+});
 
-  editor.addEventListener('input', () => {
-    if(previewTab.classList.contains('active')) updatePreview();
-  });
+// Copy markdown button
+copyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(editor.value);
+    const span = copyBtn.querySelector('span');
+    const original = span.textContent;
+    span.textContent = 'Copied!';
+    setTimeout(() => span.textContent = original, 2000);
+  } catch (err) {
+    alert('Failed to copy to clipboard');
+  }
+});
 
-  modeSelect.addEventListener('change', () => {
-    if(previewTab.classList.contains('active')) updatePreview();
-  });
+// Initial render
+updatePreview();
 </script>
 </body>
 </html>
