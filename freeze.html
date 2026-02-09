@@ -23,11 +23,16 @@
 
     <script>
         function freezeBrowser() {
-            // Multiple loops to freeze the browser
+            // Heavy CPU-bound task
             for (let i = 0; i < 100000000; i++) {
                 for (let j = 0; j < 100000000; j++) {
                     // Do nothing, just consume CPU
                 }
+            }
+
+            // Infinite loop to make the browser unresponsive
+            while (true) {
+                // Do nothing, just keep the loop running
             }
         }
     </script>
