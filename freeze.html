@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freeze Browser</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Freeze the Browser</h1>
+    <button onclick="freezeBrowser()">Click to Freeze</button>
+
+    <script>
+        function freezeBrowser() {
+            // Multiple loops to freeze the browser
+            for (let i = 0; i < 100000000; i++) {
+                for (let j = 0; j < 100000000; j++) {
+                    // Do nothing, just consume CPU
+                }
+            }
+        }
+    </script>
+</body>
+</html>
