@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Music Player</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #1f1c2c, #928dab);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+    text-shadow: 1px 1px 5px #000;
+  }
+
+  .player {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  audio {
+    width: 300px;
+    outline: none;
+  }
+
+  button {
+    margin-top: 10px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background: #ff5e62;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  button:hover {
+    background: #ff2a2a;
+  }
+</style>
+</head>
+<body>
+
+<h1>My Music Player</h1>
+
+<div class="player">
+  <audio id="player">
+    <source src="song.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <div>
+    <button onclick="play()">Play</button>
+    <button onclick="pause()">Pause</button>
+  </div>
+</div>
+
+<script>
+  const player = document.getElementById('player');
+  function play() { player.play(); }
+  function pause() { player.pause(); }
+</script>
+
+</body>
+</html>
